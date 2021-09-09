@@ -44,6 +44,6 @@ sudo apt-get update && \
   sudo apt-get install nvidia-docker2 -y && \
   sudo pkill -SIGHUP dockerd
 
-# Run ekholabs/toxicity
-sudo docker pull ekholabs/toxicity
-sudo docker run --runtime=nvidia -d -v $HOME:/data ekholabs/toxicity python main.py cnn
+# Run jdkoning/toxicity
+sudo docker pull jdkoning/toxicity
+sudo docker run --runtime=nvidia -d -v $HOME:/data jdkoning/toxicity python main.py cnn

@@ -1,3 +1,6 @@
+### Notice
+I have forked [this repo](https://github.com/artificially-ai/automated_ml) to reupload the docker contains as the old ones were not available anymore.
+
 # Automated Machine Learning
 
 The goal of this repository is to introduce to Machine Learning Engineers the goodies of
@@ -89,7 +92,7 @@ instance type has to offer. If you want it to be faster, you can create an AMI o
 and just keep the last two lines of the ```scripts/prepare_instance.sh``` file. It will only
 fetch the Docker image, in case there are changes. The whole creation process should go from 6 to 2 minutes.
 
-Once the installation is done, it will fetch the ```ekholabs/toxicity``` image from [Hub Docker](https://hub.docker.com/r/ekholabs/toxicity/)
+Once the installation is done, it will fetch the ```jdkoning/toxicity``` image from [Hub Docker](https://hub.docker.com/r/ekholabs/toxicity/)
 and start the Python application.
 
 To know more about what's going on on the Docker container, have a look at the [Kaggle Toxicity](https://github.com/ekholabs/kaggle_toxicity) repository.

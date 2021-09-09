@@ -1,20 +1,19 @@
 resource "aws_s3_bucket" "models" {
-  bucket = "ekholabs-kaggle-models"
-  acl    = "bucket-owner-full-control"
+  bucket = "toxicity-models"
   force_destroy = true
 }
 
 resource "aws_instance" "kaggle_toxicity" {
-  ami                         = "${var.ami}"
-  instance_type               = "${var.instance_type}"
-  key_name                    = "${var.aws_key_name}"
+  ami                         = var.ami
+  instance_type               = var.instance_type
+  key_name                    = var.aws_key_name
 
-  vpc_security_group_ids      = ["${aws_security_group.vpc_sg.id}"]
-  subnet_id                   = "${aws_subnet.eu-west-1a-public.id}"
+  vpc_security_group_ids      = [aws_security_group.vpc_sg.id]
+  subnet_id                   = aws_subnet.eu-west-1a-public.id
   associate_public_ip_address = true
 
   root_block_device {
-    volume_size = 50
+    volume_size = 150
   }
 
   provisioner "file" {
@@ -22,9 +21,10 @@ resource "aws_instance" "kaggle_toxicity" {
     destination = "/home/ubuntu/hyperparams_cnn.json"
 
     connection {
+      host        = coalesce(self.public_ip, self.private_ip)
       type        = "ssh"
       user        = "ubuntu"
-      private_key = "${file("aws/keys/aws-kaggle-IE.pem")}"
+      private_key = file("aws/keys/toxicity.pem")
       agent       = "false"
       timeout     = "3m"
     }
@@ -35,9 +35,10 @@ resource "aws_instance" "kaggle_toxicity" {
     destination = "/home/ubuntu/hyperparams_lstm.json"
 
     connection {
+      host        = coalesce(self.public_ip, self.private_ip)
       type        = "ssh"
       user        = "ubuntu"
-      private_key = "${file("aws/keys/aws-kaggle-IE.pem")}"
+      private_key = file("aws/keys/toxicity.pem")
       agent       = "false"
       timeout     = "3m"
     }
@@ -48,9 +49,10 @@ resource "aws_instance" "kaggle_toxicity" {
     destination = "/home/ubuntu/config"
 
     connection {
+      host        = coalesce(self.public_ip, self.private_ip)
       type        = "ssh"
       user        = "ubuntu"
-      private_key = "${file("aws/keys/aws-kaggle-IE.pem")}"
+      private_key = file("aws/keys/toxicity.pem")
       agent       = "false"
       timeout     = "3m"
     }
@@ -61,9 +63,10 @@ resource "aws_instance" "kaggle_toxicity" {
     destination = "/home/ubuntu/credentials"
 
     connection {
+      host        = coalesce(self.public_ip, self.private_ip)
       type        = "ssh"
       user        = "ubuntu"
-      private_key = "${file("aws/keys/aws-kaggle-IE.pem")}"
+      private_key = file("aws/keys/toxicity.pem")
       agent       = "false"
       timeout     = "3m"
     }
@@ -73,9 +76,10 @@ resource "aws_instance" "kaggle_toxicity" {
     script = "scripts/prepare_instance.sh"
 
     connection {
+      host        = coalesce(self.public_ip, self.private_ip)
       type        = "ssh"
       user        = "ubuntu"
-      private_key = "${file("aws/keys/aws-kaggle-IE.pem")}"
+      private_key = file("aws/keys/toxicity.pem")
       agent       = "false"
       timeout     = "1m"
     }
@@ -83,9 +87,9 @@ resource "aws_instance" "kaggle_toxicity" {
 }
 
 resource "aws_eip" "ip" {
-  instance = "${aws_instance.kaggle_toxicity.id}"
+  instance = aws_instance.kaggle_toxicity.id
 }
 
 output "ip" {
-  value = "${aws_eip.ip.public_ip}"
+  value = aws_eip.ip.public_ip
 }
